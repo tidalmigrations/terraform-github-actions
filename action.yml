@@ -22,6 +22,9 @@ inputs:
   tf_actions_working_dir:
     description: 'Terraform working directory.'
     default: '.'
+  tg_actions_version:
+    description: 'Terragrunt version to install.'
+    required: true
 outputs:
   tf_actions_output:
     description: 'The Terraform outputs in JSON format.'

@@ -15,6 +15,16 @@ function hasPrefix {
   esac
 }
 
+function parseTerragruntInputs {
+  # Required inputs
+  if [ "${INPUT_TG_ACTIONS_VERSION}" != "" ]; then
+    tgVersion=${INPUT_TG_ACTIONS_VERSION}
+  else
+    echo "Input terragrunt_version cannot be empty"
+    exit 1
+  fi
+}
+
 function parseInputs {
   # Required inputs
   if [ "${INPUT_TF_ACTIONS_VERSION}" != "" ]; then
@@ -63,6 +73,30 @@ EOF
   fi
 }
 
+function installTerragrunt {
+  if [[ "${tgVersion}" == "latest" ]]; then
+    echo "Checking the latest version of Terragrunt"
+    tgVersion=$(curl --silent "https://github.com/gruntwork-io/terragrunt/releases/latest" | sed 's#.*tag/\(.*\)\".*#\1#')
+
+    if [[ -z "${tgVersion}" ]]; then
+      echo "Failed to fetch the latest Terragrunt version"
+      exit 1
+    fi
+  fi
+
+  url="https://github.com/gruntwork-io/terragrunt/releases/download/${tgVersion}/terragrunt_linux_amd64"
+
+  echo "Downloading Terragrunt ${tgVersion}"
+  curl -s -S -L -o /usr/local/bin/terragrunt ${url}
+  chmod +x /usr/local/bin/terragrunt
+  if [ "${?}" -ne 0 ]; then
+    echo "Failed to download Terragrunt ${tgVersion}"
+    exit 1
+  fi
+  echo "Successfully downloaded Terragrunt ${tgVersion}"
+  
+}
+
 function installTerraform {
   if [[ "${tfVersion}" == "latest" ]]; then
     echo "Checking the latest version of Terraform"
@@ -104,32 +138,39 @@ function main {
   source ${scriptDir}/terraform_output.sh
 
   parseInputs
+  parseTerrarguntInputs
   configureCLICredentials
   cd ${GITHUB_WORKSPACE}/${tfWorkingDir}
 
   case "${tfSubcommand}" in
     fmt)
       installTerraform
+      installTerragrunt
       terraformFmt ${*}
       ;;
     init)
       installTerraform
+      installTerragrunt
       terraformInit ${*}
       ;;
     validate)
       installTerraform
+      installTerragrunt
       terraformValidate ${*}
       ;;
     plan)
       installTerraform
+      installTerragrunt
       terraformPlan ${*}
       ;;
     apply)
       installTerraform
+      installTerragrunt
       terraformApply ${*}
       ;;
     output)
       installTerraform
+      installTerragrunt
       terraformOutput ${*}
       ;;
     *)
