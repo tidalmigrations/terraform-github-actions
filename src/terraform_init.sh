@@ -2,7 +2,7 @@
 
 function terraformInit {
   # Gather the output of `terraform init`.
-  echo "init: info: initializing Terraform configuration in ${tfWorkingDir}"
+  echo "init: info: initializing Terragrunt/Terraform configuration in ${tfWorkingDir}"
   #initOutput=$(terraform init -input=false ${*} 2>&1)
   lsOut=$(ls)
   echo "${lsOut}"
