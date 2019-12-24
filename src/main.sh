@@ -138,7 +138,7 @@ function main {
   source ${scriptDir}/terraform_output.sh
 
   parseInputs
-  parseTerrarguntInputs
+  parseTerraguntInputs
   configureCLICredentials
   cd ${GITHUB_WORKSPACE}/${tfWorkingDir}
 
