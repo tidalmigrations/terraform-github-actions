@@ -128,6 +128,10 @@ function installTerraform {
 }
 
 function main {
+  # debug
+  pwd
+  ls -al /github/workspace
+
   # Source the other files to gain access to their functions
   scriptDir=$(dirname ${0})
   source ${scriptDir}/terraform_fmt.sh
