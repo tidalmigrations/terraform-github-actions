@@ -129,6 +129,7 @@ function installTerraform {
 
 function main {
   # debug
+  echo ${HOME}
   pwd
   ls -al /github/workspace
 
