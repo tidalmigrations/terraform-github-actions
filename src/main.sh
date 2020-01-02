@@ -163,6 +163,11 @@ function main {
       installTerragrunt
       terraformPlan ${*}
       ;;
+    plan-all)
+      installTerraform
+      installTerragrunt
+      terraformPlan ${*}
+      ;;
     apply)
       installTerraform
       installTerragrunt
