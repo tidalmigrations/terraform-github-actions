@@ -173,6 +173,11 @@ function main {
       installTerragrunt
       terraformApply ${*}
       ;;
+    apply-all)
+      installTerraform
+      installTerragrunt
+      terraformApply ${*}
+      ;;
     output)
       installTerraform
       installTerragrunt
